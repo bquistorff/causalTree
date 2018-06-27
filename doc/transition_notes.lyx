@@ -1,0 +1,204 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{iftex}
+%Latex likes to make ligatures from ff, fi, fl which breaks text manipulation (searching and copying)
+\usepackage{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+
+%% Put visual box around \input's (e.g. snippets, tables) for easier checking. (LaTeX will already complain if file doesn't exist.) Won't work if \begin{centering}...\end{centering} in inputted file.
+%\let\oldinput\input
+%\renewcommand{\input}[1]{\fbox{\oldinput{#1}}} %uncomment this to turn on
+
+% link DOIs in references section
+\usepackage{doi}
+
+%to allow the \begin{adjustwidth}
+\usepackage[strict]{changepage}
+
+%Allows for Color bars along margins. Do \cbstart and \cbend.
+\ifPDFTeX
+  \usepackage{changebar}
+\fi
+
+%allows a \FloatBarrier
+\usepackage{placeins}
+
+%allows you to use pbox in tables (to wrap cells with long text) (tables often via input)
+\usepackage{pbox}
+\usepackage{makecell}
+\usepackage{multirow}
+
+\usepackage{booktabs} %used for nicer tables
+% Easily make booktabs having double ruling
+%  (can also be used to make them look like other tables)
+%\renewcommand{\toprule}{\hline\hline}
+%\renewcommand{\bottomrule}{\hline\hline}
+
+%Put all floats at the end. Options:
+%\usepackage[nolists]{endfloat}
+%Allow multiple floats per page at the end
+%\renewcommand{\efloatseparator}{\vfill}
+
+%%% Normalize PDF
+\ifPDFTeX
+  \pdfsuppressptexinfo15 %Suppress info of imported PDFs
+  \pdftrailerid{} %Remove ID (or insert # to try to deterministically seed the ID generation)
+
+  %% Remove dates and production details
+  \hypersetup{pdfinfo={ Creator={}, Producer={},ModDate={...},CreationDate={...} }}
+  % hyperref usually also sets Author, Title, Subject(blank), Keywords(blank)
+  %NB: Can't reproduce the completely empty dates with hyperref (could use subset of \pdfinfo)
+  
+  %If you don't use hyperref, use the following line instead. Hyperref "resets" them (duplicates in the output)
+  %\pdfinfo{ /Creator ()  /Producer () /ModDate ()  /CreationDate () } 
+  %Could also do (But MiKTeX doesn't set} Title, Author, Subject, and Keywords
+\else
+  \pdfvariable suppressoptionalinfo 767
+
+  %% If using Hyperref or doi then include the following
+  \hypersetup{pdfinfo={ Creator={}, Producer={} }}
+\fi
+\end_preamble
+\options round
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3.5cm
+\topmargin 3cm
+\rightmargin 3.5cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Notes on modifying causalTree for scalar treatments
+\end_layout
+
+\begin_layout Section
+Reasons
+\end_layout
+
+\begin_layout Standard
+Don't want to use the trees in the grf repo since:
+\end_layout
+
+\begin_layout Itemize
+They don't CV the tree depth
+\end_layout
+
+\begin_layout Itemize
+Supplemental 
+\begin_inset Quotes eld
+\end_inset
+
+honest
+\begin_inset Quotes erd
+\end_inset
+
+ criterion: 
+\begin_inset Quotes eld
+\end_inset
+
+apply a form propensity weighting within each leaf to correct for variations
+ in 
+\begin_inset Formula $p(x)$
+\end_inset
+
+ inside the leaf.
+ 
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also even if using 
+\family typewriter
+causal_forest(X, Y, W, sample.fraction = 1, num.trees = 1, ci.group.size = 1)
+\family default
+, can't get anything good from the inside tree (the data doesn't look useful
+ and I can't convert it to an rpart object).
+\end_layout
+
+\begin_layout Section
+Implementation
+\end_layout
+
+\end_body
+\end_document

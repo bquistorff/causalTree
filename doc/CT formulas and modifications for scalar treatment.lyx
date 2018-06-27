@@ -1,0 +1,631 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\rightmargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Honest Trees
+\end_layout
+
+\begin_layout Standard
+The first few sections go more in detail through the formulas of the Athey-Imben
+s paper.
+\end_layout
+
+\begin_layout Standard
+Main idea is to separate sample for model structure as from estimation.
+ This then changes the criteria.
+\end_layout
+
+\begin_layout Standard
+Then obviously not about predicting means (which we know, the ground truth)
+ but treatment effects (which we don't, but can estimate).
+\end_layout
+
+\begin_layout Section
+Mean Prediction
+\end_layout
+
+\begin_layout Standard
+Some definitions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mu}(x;S,\Pi) & =\frac{1}{\#(i\in S:X_{i}\in\ell(x;\Pi))}\sum_{i\in S:X_{i}\in\ell(x;\Pi)}Y_{i}\\
+\mathrm{MSE0}_{\mu}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}(Y_{i}-\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi))^{2}\\
+\mathrm{MSE}_{\mu}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\{(Y_{i}-\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi))^{2}-Y_{i}^{2}\}\ \textrm{Add a constant for nicety}\\
+\mathrm{EMSE}_{\mu}(\Pi) & =\mathbb{E}_{\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}}}[\mathrm{MSE}_{\mu}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi)]
+\end{align*}
+
+\end_inset
+
+Now let's re-arrange this to see how we could estimate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathrm{EMSE}_{\mu}(\Pi)= & \mathbb{E}_{\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}}}[\mathrm{MSE}_{\mu}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi)]\\
+= & \mathbb{E}_{(X_{i},Y_{i}),\mathcal{S}^{\mathrm{est}}}\left[\{Y_{i}-\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)\}^{2}-Y_{i}^{2}\right]\ \textrm{Dissolved into parts the sample }S^{te}\\
+= & \mathbb{E}_{(X_{i},Y_{i}),\mathcal{S}^{\mathrm{est}}}\left[\{[Y_{i}-\mu(X_{i};\Pi)]-[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]\}^{2}-Y_{i}^{2}\right]\\
+= & \mathbb{E}_{(X_{i},Y_{i}),\mathcal{S}^{\mathrm{est}}}[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}-2[Y_{i}-\mu(X_{i};\Pi)][\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]\\
+ & +[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}]\\
+= & \mathbb{E}_{(X_{i},Y_{i})}\left[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}\right]+\mathbb{E}_{X_{i},\mathcal{S}^{\mathrm{est}}}[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}\\
+ & -2\mathbb{E}_{(X_{i},Y_{i})}\mathbb{E}_{\mathcal{S}^{\mathrm{est}}}\left[[Y_{i}-\mu(X_{i};\Pi)][\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]|(X_{i},Y_{i})\right]\\
+= & \mathbb{E}_{(X_{i},Y_{i})}\left[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}\right]+\mathbb{E}_{X_{i},\mathcal{S}^{\mathrm{est}}}[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}\\
+ & -2\mathbb{E}_{(X_{i},Y_{i})}[Y_{i}-\mu(X_{i};\Pi)][\mathbb{E}_{\mathcal{S}^{\mathrm{est}}}\left[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)|(X_{i},Y_{i})\right]-\mu(X_{i};\Pi)]\\
+= & \mathbb{E}_{(X_{i},Y_{i})}\left[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}\right]+\mathbb{E}_{X_{i},\mathcal{S}^{\mathrm{est}}}[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}\\
+ & -2\mathbb{E}_{(X_{i},Y_{i})}[Y_{i}-\mu(X_{i};\Pi)][\mu(X_{i};\Pi)-\mu(X_{i};\Pi)]\\
+\mathrm{EMSE}_{\mu}(\Pi)= & \mathbb{E}_{(X_{i},Y_{i})}\left[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}\right]+\mathbb{E}_{X_{i},\mathcal{S}^{\mathrm{est}}}[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}
+\end{align*}
+
+\end_inset
+
+Continuing on
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathrm{EMSE}_{\mu}(\Pi)= & \mathbb{E}_{(X_{i},Y_{i})}\left[[Y_{i}-\mu(X_{i};\Pi)]^{2}-Y_{i}^{2}\right]+\mathbb{E}_{X_{i},\mathcal{S}^{\mathrm{est}}}[\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)-\mu(X_{i};\Pi)]^{2}\nonumber \\
+= & \mathbb{E}_{(X_{i},Y_{i})}\left[-2\mu(X_{i};\Pi)Y_{i}+\mu^{2}(X_{i};\Pi)\right]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]\nonumber \\
+= & -2\mathbb{E}_{X_{i}}\left[\mu(X_{i};\Pi)\mathbb{E}_{Y_{i}}[Y_{i}|X_{i}]\right]+\mathbb{E}_{X_{i}}\left[\mu^{2}(X_{i};\Pi)\right]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]\nonumber \\
+= & -2\mathbb{E}_{X_{i}}\left[\mu(X_{i};\Pi)^{2}\right]+\mathbb{E}_{X_{i}}\left[\mu^{2}(X_{i};\Pi)\right]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]\nonumber \\
+\mathrm{EMSE}_{\mu}(\Pi)= & -\mathbb{E}_{X_{i}}[\mu^{2}(X_{i};\Pi)]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]\label{eq:emse-mean}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We wish to estimate this in terms of 
+\begin_inset Formula $\mathcal{S}^{\mathrm{tr}}$
+\end_inset
+
+ and 
+\begin_inset Formula $N^{\mathrm{est}}$
+\end_inset
+
+.
+ For the second part note that (remember that 
+\begin_inset Formula $\mathbb{V}(\hat{\mu})=N^{-1}S^{2}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\hat{\mathbb{V}}(\hat{\mu}(x;\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{N^{\mathrm{est}}(\ell(x;\Pi))}\label{eq:v-mean}\\
+\hat{\mathbb{E}}[\mathbb{V}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)|i\in\mathcal{S}^{\mathrm{tr}}] & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(X_{i};\Pi))}{N^{\mathrm{est}}(\ell(X_{i};\Pi))}\nonumber \\
+ & =\frac{1}{N^{\mathrm{tr}}}\sum_{\ell}N^{\mathrm{tr}}(\ell)\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)}{N^{\mathrm{est}}(\ell)}\nonumber \\
+ & =\sum_{\ell}\frac{N^{\mathrm{tr}}(\ell)}{N^{\mathrm{tr}}}\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)}{N^{\mathrm{est}}(\ell)}\nonumber \\
+ & =\sum_{\ell}\frac{N^{\mathrm{est}}(\ell)}{N^{\mathrm{est}}}\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)}{N^{\mathrm{est}}(\ell)}\nonumber \\
+ & =\frac{1}{N^{\mathrm{est}}}\sum_{\ell}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\nonumber 
+\end{align}
+
+\end_inset
+
+Where in the second-to last line 
+\begin_inset Quotes eld
+\end_inset
+
+Assuming the leaf shares are approximately equal in the estimation and training
+ samples, we can approximate this variance estimator by
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the first term 
+\begin_inset Quotes eld
+\end_inset
+
+we can use the square of the estimated means in the training sample, minus
+ an estimate of its variance.
+\begin_inset Quotes erd
+\end_inset
+
+ (Note, variance is estimated like above and 
+\begin_inset Formula $\mathbb{V}(\hat{\mu})=\mathbb{E}[\hat{\mu}^{2}]-(\mathbb{E}[\hat{\mu}])^{2}=\mathbb{E}[\hat{\mu}^{2}]-\mu^{2}$
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathbb{E}}[\mu^{2}(x;\Pi)] & =\hat{\mu}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)-\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{N^{\mathrm{tr}}(\ell(x;\Pi))}
+\end{align*}
+
+\end_inset
+
+Putting these together we get 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathrm{\widehat{EMSE}}_{\mu}(\mathcal{S}^{\mathrm{tr}},N^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\left[-\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(X_{i};\Pi)}{N^{\mathrm{tr}}(\ell(X_{i};\Pi))}\right]+\frac{1}{N^{\mathrm{est}}}\sum_{\ell}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\nonumber \\
+ & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\frac{1}{N^{\mathrm{tr}}}\sum_{\ell}N^{\mathrm{tr}}(\ell)\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)}{N^{\mathrm{tr}}(\ell)}+\frac{1}{N^{\mathrm{est}}}\sum_{\ell}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\nonumber \\
+ & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\label{eq:honest-mean}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the CART's criterion is 
+\begin_inset Formula 
+\begin{align}
+\mathrm{-MSE}_{\mu}(\mathcal{S}^{\mathrm{tr}},N^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\label{eq:cart-mean}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We build the tree on the 
+\emph on
+tr
+\emph default
+aining sample and then estimate treatment effects on the 
+\emph on
+est
+\emph default
+imation sample.
+ Building the tree requires tuning a pruning parameter via CV so we repeatedly
+ split 
+\emph on
+tr
+\emph default
+ into 
+\emph on
+tr,tr
+\emph default
+ and 
+\emph on
+tr,cv
+\emph default
+ (replace 
+\emph on
+tr
+\emph default
+ with 
+\emph on
+tr,cv
+\emph default
+ in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:honest-mean"
+
+\end_inset
+
+).
+ If we then want to evaluate in the end (which I don't think we have to
+ do when estimating) then we use a 
+\emph on
+te
+\emph default
+st sample.
+\end_layout
+
+\begin_layout Section
+Binary treatment effects
+\end_layout
+
+\begin_layout Standard
+Next for treatment effects
+\begin_inset Formula 
+\begin{align*}
+MSE_{\tau}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\{(\tau_{i}-\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi))^{2}-\tau_{i}^{2}\}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Modifying CART
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Modifying-CART"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In preparation, note that for means
+\begin_inset Formula 
+\begin{align*}
+\mathrm{MSE}_{\mu}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{tr}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\{(Y_{i}-\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi))^{2}-Y_{i}^{2}\}\\
+ & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\{-2Y_{i}\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\}\\
+ & =\frac{-2}{N^{\mathrm{te}}}\sum_{\ell}\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\sum_{i\in\mathcal{S}^{\mathrm{te}}\cap\ell}Y_{i}+\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\\
+ & =\frac{-2}{N^{\mathrm{te}}}\sum_{\ell}\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\sum_{i\in\mathcal{S}^{\mathrm{te}}\cap\ell}\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{te}},\Pi)+\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\ \textrm{constant within leaf}\\
+ & =\frac{-2}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{te}},\Pi)+\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\hat{\mu}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)
+\end{align*}
+
+\end_inset
+
+Then we see that 
+\begin_inset Formula 
+\begin{align*}
+\mathbb{E}_{\mathcal{S}^{\mathrm{te}}}[\tau_{i}|i\in\mathcal{S}^{\mathrm{te}}\cap\ell(x,\Pi)] & =\mathbb{E}_{\mathcal{S}^{\mathrm{te}}}[\hat{\tau}(x;\mathcal{S}^{\mathrm{te}},\Pi)]
+\end{align*}
+
+\end_inset
+
+Then, we can construct an unbiased estimator as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\widehat{MSE}_{\tau}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{tr}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}[-2\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{te}},\Pi)\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\hat{\tau}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)]
+\end{align*}
+
+\end_inset
+
+The corresponding CART algorithm would make the samples the same (analogy
+ from equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:cart-mean"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-\widehat{MSE}_{\tau}(\mathcal{S}^{\mathrm{tr}},\mathcal{S}^{\mathrm{tr}},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\tau}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)\label{eq:adaptive-treat}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Modifying for Honest
+\end_layout
+
+\begin_layout Standard
+We can do the same expansion as above and change equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:emse-mean"
+
+\end_inset
+
+ to .
+\begin_inset Formula 
+\begin{align*}
+\mathrm{EMSE}_{\mu}(\Pi) & =-\mathbb{E}_{X_{i}}[\tau^{2}(X_{i};\Pi)]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]
+\end{align*}
+
+\end_inset
+
+And we can estimate this (remember that 
+\begin_inset Formula $V(\tau)=V(\mu_{1}-\mu_{0})=V(\mu_{1})+V(\mu_{0})$
+\end_inset
+
+) by assuming that 
+\begin_inset Formula $p(\ell)$
+\end_inset
+
+ is roughly the same across leaves.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathbb{V}}(\hat{\tau}(x;\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{pN^{\mathrm{est}}(\ell(x;\Pi))}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{(1-p)N^{\mathrm{est}}(\ell(x;\Pi))}\\
+ & =\frac{1}{N^{\mathrm{est}}(\ell(x;\Pi))}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{1-p}\right)\\
+\hat{\mathbb{E}}[\mathbb{V}(\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)|i\in\mathcal{S}^{\mathrm{tr}}] & =\frac{1}{N^{\mathrm{est}}}\sum_{\ell}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)}{1-p}\right)\\
+\hat{\mathbb{E}}[\tau^{2}(x;\Pi)] & =\hat{\tau}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)-\frac{1}{N^{\mathrm{tr}}(\ell(x;\Pi))}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{1-p}\right)
+\end{align*}
+
+\end_inset
+
+So that in parallel to equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:honest-mean"
+
+\end_inset
+
+(it's like 
+\begin_inset Formula $Y_{i}=\mu_{i}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathrm{\widehat{EMSE}}_{\tau}(\mathcal{S}^{\mathrm{tr}},N^{\mathrm{est}},\Pi) & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)}{1-p}\right)\label{eq:honest-treat}
+\end{align}
+
+\end_inset
+
+Where we use as the criterion the negative.
+\end_layout
+
+\begin_layout Section
+Scalar regressor
+\end_layout
+
+\begin_layout Standard
+Now let 
+\begin_inset Formula $W_{i}$
+\end_inset
+
+ be a scalar variable and relabel it's coefficient as 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+ The MSE becomes 
+\begin_inset Formula 
+\begin{align*}
+MSE_{\beta}(\mathcal{S}^{\mathrm{te}},\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{te}}}\sum_{i\in\mathcal{S}^{\mathrm{te}}}\{(\beta_{i}-\hat{\beta}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi))^{2}-\beta_{i}^{2}\}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Adaptive
+\end_layout
+
+\begin_layout Standard
+By analogy to section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Modifying-CART"
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+-\mathrm{\widehat{MSE}}_{\beta}(\mathcal{S}^{\mathrm{tr}},\mathcal{S}^{\mathrm{tr}},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\beta}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)\label{eq:adaptive-regressor}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Honest
+\end_layout
+
+\begin_layout Standard
+and an estimate of this (in parallel to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:emse-mean"
+
+\end_inset
+
+) 
+\begin_inset Formula 
+\begin{align*}
+\mathrm{EMSE}_{\beta}(\Pi) & =-\mathbb{E}_{X_{i}}[\beta^{2}(X_{i};\Pi)]+\mathbb{E}_{X_{i}}[\mathbb{V_{\mathcal{S}^{\mathrm{est}}}}(\hat{\beta}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)]
+\end{align*}
+
+\end_inset
+
+The general idea from before is to use 
+\begin_inset Formula $S_{\mathcal{S}^{\mathrm{tr}}}^{2}$
+\end_inset
+
+ and then complete the variance calculation by either assuming or knowing
+ properties of the non-outcome data of 
+\begin_inset Formula $\mathcal{S}^{\mathrm{est}}$
+\end_inset
+
+ (label this 
+\begin_inset Formula $\mathcal{S}_{0}^{\mathrm{est}}$
+\end_inset
+
+).
+ With mean-prediction this involved knowing 
+\begin_inset Formula $N^{est}$
+\end_inset
+
+ and assuming leaf shares were the same between 
+\begin_inset Formula $\mathcal{S}^{\mathrm{est}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{S}^{\mathrm{tr}}$
+\end_inset
+
+.
+ With treatment effect estimation this involved knowing the above and assuming
+ that 
+\begin_inset Formula $p(\ell)$
+\end_inset
+
+ were roughly identical across leaves.
+ In practice, with both approaches, a minimum 
+\begin_inset Formula $(N_{\mathrm{treat}}^{\mathcal{S}}(\ell),N_{\mathrm{control}}^{\mathcal{S}}(\ell))$
+\end_inset
+
+ was enforced.
+ Let 
+\begin_inset Formula $\Omega_{\beta}^{\mathcal{S}}=\sum_{i\in\mathcal{S}}w_{i}^{2}$
+\end_inset
+
+ and we will use to estimate the variance (previously 
+\begin_inset Formula $\Omega_{\mu}^{\mathcal{S}}=N^{\mathcal{S}}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathbb{V}}(\hat{\beta}(x;\mathcal{S}^{\mathrm{est}},\Pi) & =\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell(x;\Pi)}}\\
+\hat{\mathbb{E}}[\mathbb{V}(\hat{\mu}(X_{i};\mathcal{S}^{\mathrm{est}},\Pi)|i\in\mathcal{S}^{\mathrm{tr}}] & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(X_{i};\Pi))}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell(X_{i};\Pi)}}\\
+ & =\frac{1}{N^{\mathrm{est}}}\sum_{\ell}\frac{N^{\mathrm{est}}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell}}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)
+\end{align*}
+
+\end_inset
+
+(Note that this was further simplified when 
+\begin_inset Formula $\Omega_{\mu}^{\mathcal{S}}=N^{\mathcal{S}}$
+\end_inset
+
+).
+ And for the other term 
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathbb{E}}[\beta^{2}(x;\Pi)] & =\hat{\beta}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)-\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(x;\Pi))}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{tr}}\cap\ell(x;\Pi)}}
+\end{align*}
+
+\end_inset
+
+Combining these we get 
+\begin_inset Formula 
+\begin{align}
+\mathrm{\widehat{EMSE}}_{\beta}(\mathcal{S}^{\mathrm{tr}},\mathcal{S}_{0}^{\mathrm{est}},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\left[-\hat{\beta}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)+\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell(X_{i};\Pi))}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{tr}}\cap\ell(X_{i};\Pi)}}\right]+\frac{1}{N^{\mathrm{est}}}\sum_{\ell}\frac{N^{\mathrm{est}}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell}}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\nonumber \\
+ & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\beta}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)+\frac{1}{N^{\mathrm{tr}}}\sum_{\ell}N^{\mathrm{tr}}(\ell)\frac{S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{tr}}\cap\ell}}+\frac{1}{N^{\mathrm{est}}}\sum_{\ell}\frac{N^{\mathrm{est}}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell}}S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\nonumber \\
+ & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\beta}^{2}(x;\mathcal{S}^{\mathrm{tr}},\Pi)+\sum_{\ell}\left[\frac{1}{N^{\mathrm{tr}}}\frac{N^{\mathrm{tr}}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{tr}}\cap\ell}}+\frac{1}{N^{\mathrm{est}}}\frac{N^{\mathrm{est}}(\ell)}{\Omega_{\beta}^{\mathcal{S}^{\mathrm{est}}\cap\ell}}\right]S_{\mathcal{S}^{\mathrm{tr}}}^{2}(\ell)\label{eq:honest-regressor}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the treatment effect case there was a minimum 
+\begin_inset Formula $(N_{\mathrm{treat}}^{\mathcal{S}}(\ell),N_{\mathrm{control}}^{\mathcal{S}}(\ell))$
+\end_inset
+
+ was required.
+ The analogue would be to have a minimum 
+\begin_inset Formula $\Omega_{\beta}^{\mathcal{S}}$
+\end_inset
+
+ per leaf.
+\end_layout
+
+\begin_layout Standard
+If the model includes others variables so that 
+\begin_inset Formula $X=(W,\tilde{X})$
+\end_inset
+
+ then 
+\begin_inset Formula $\Omega_{\beta}^{\mathcal{S}}=(X'X)_{11}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Questions
+\end_layout
+
+\begin_layout Standard
+Is my approach to generalizing correct?
+\end_layout
+
+\end_body
+\end_document
