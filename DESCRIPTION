@@ -1,6 +1,6 @@
 Package: causalTree
-Version: 0.0
-Date: 2016-04-12
+Version: 2.0
+Date: 2018-07-06
 Authors@R: c(person("Susan", "Athey", role = "aut",
 	             email = "athey@susanathey.com"),
              person("Guido", "Imbens", role = "aut",	
