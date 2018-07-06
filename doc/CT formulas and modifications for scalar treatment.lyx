@@ -627,5 +627,46 @@ Questions
 Is my approach to generalizing correct?
 \end_layout
 
+\begin_layout Section
+Multivariate treatments
+\end_layout
+
+\begin_layout Standard
+What to do when there are multiple treatments? Suppose we have 
+\begin_inset Formula $\tau$
+\end_inset
+
+ & 
+\begin_inset Formula $\gamma$
+\end_inset
+
+.
+ Possible options:
+\end_layout
+
+\begin_layout Enumerate
+We only care about heterogeneous effects for one treatment.
+ Just include 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ in controls for treatment, but then include it in the final regression?
+\end_layout
+
+\begin_layout Enumerate
+We care about heterogeneous effects for multiple treatments and we use the
+ same tree.
+ Do a weighted objective function for trading-off the trying to determine
+ the two?
+\end_layout
+
+\begin_layout Enumerate
+We care about heterogeneous effects for multiple treatments and we different
+ trees.
+ Seems hardest so hopefully we don't want this too much.
+ Can we alternate between increasing the depth of the two trees and maybe
+ after each we residualize the other variables?
+\end_layout
+
 \end_body
 \end_document

@@ -8,6 +8,7 @@ Authors@R: c(person("Susan", "Athey", role = "aut",
              person("Yanyang", "Kong", role = c("aut", "trl", "cre"),
                     email = "yanyangk@stanford.edu",
 		    comment = "author of initial R port"))
+Maintainer: Susan Athey <athey@susanathey.com>
 Description: Recursive partitioning for classification, 
   regression and survival trees.  An implementation of most of the 
   functionality of the 1984 book by Breiman, Friedman, Olshen and Stone.
