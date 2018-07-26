@@ -50,6 +50,11 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
+\branch hide
+\selected 0
+\filename_suffix 0
+\color #faf0e6
+\end_branch
 \index Index
 \shortcut idx
 \color #008000
@@ -165,7 +170,20 @@ We wish to estimate this in terms of
 \begin_inset Formula $\mathbb{V}(\hat{\mu})=N^{-1}S^{2}$
 \end_inset
 
-)
+) 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $S^{2}=\frac{1}{n-1}\sum_{i}(y_{i}-\bar{y})^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -292,6 +310,10 @@ te
 \emph default
 st sample.
 \end_layout
+
+\begin_layout Standard
+\begin_inset Branch hide
+status collapsed
 
 \begin_layout Section
 Binary treatment effects
@@ -433,13 +455,24 @@ reference "eq:honest-mean"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\mathrm{\widehat{EMSE}}_{\tau}(\mathcal{S}^{\mathrm{tr}},N^{\mathrm{est}},\Pi) & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\tau}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)}{1-p}\right)\label{eq:honest-treat}
+\mathrm{\widehat{EMSE}}_{\tau}(\mathcal{S}^{\mathrm{tr}},N^{\mathrm{est}},\Pi) & =-\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\tau}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)+\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\left(\frac{S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)}{p}+\frac{S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)}{1-p}\right)\label{eq:honest-treat}
 \end{align}
 
 \end_inset
 
 Where we use as the criterion the negative.
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\begin_inset Branch hide
+status collapsed
 
 \begin_layout Section
 Scalar regressor
@@ -619,53 +652,94 @@ If the model includes others variables so that
 .
 \end_layout
 
-\begin_layout Subsection
-Questions
+\begin_layout Standard
+
+\emph on
+To do: Is my approach to generalizing correct? If not, how important is
+ it
 \end_layout
 
-\begin_layout Standard
-Is my approach to generalizing correct?
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-Multivariate treatments
+Multiple regressors and the connection to Fit-based approach
 \end_layout
 
 \begin_layout Standard
-What to do when there are multiple treatments? Suppose we have 
-\begin_inset Formula $\tau$
-\end_inset
-
- & 
-\begin_inset Formula $\gamma$
-\end_inset
-
-.
- Possible options:
+To get to multiple regressors, we need an aggregate metric and the fit-based
+ one is the most natural.
+ The problem is that in typical usage in the CT paper it will find splits
+ with different means but not different treatments effects.
+ That is cares about any different in the model, not necessarily for the
+ coefficients we want.
+ So we need to find a way so that this approach can focus on some coefficients.
 \end_layout
 
-\begin_layout Enumerate
-We only care about heterogeneous effects for one treatment.
- Just include 
-\begin_inset Formula $\gamma$
+\begin_layout Standard
+Fit-based trees maximize the following for the adaptive approach
+\begin_inset Formula 
+\begin{align*}
+MSE_{\mu,W}(S^{tr},S^{tr},\Pi) & =\sum_{i\in S^{te}}\left((Y_{i}-\hat{\mu}_{w}(W_{i},X_{i};S^{tr},\Pi))^{2}-Y_{i}^{2}\right)
+\end{align*}
+
 \end_inset
 
- in controls for treatment, but then include it in the final regression?
+Notice that if in each leaf we pre-process 
+\begin_inset Formula $Y,W$
+\end_inset
+
+ to remove the constant (demean them) then this becomes the CT-A approach.
+ This is then an approach to working with multiple variables.
+ 
 \end_layout
 
-\begin_layout Enumerate
-We care about heterogeneous effects for multiple treatments and we use the
- same tree.
- Do a weighted objective function for trading-off the trying to determine
- the two?
+\begin_layout Standard
+For the honest version we use 
+\begin_inset Formula 
+\begin{align*}
+\widehat{EMSE}_{\mu,W}(S^{tr},N^{est},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}_{w}^{2}(W_{i},X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)-\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\hat{\sigma_{l}^{2}}
+\end{align*}
+
+\end_inset
+
+Where we see that variance of the mean function is the estimated error in
+ that leaf.
 \end_layout
 
-\begin_layout Enumerate
-We care about heterogeneous effects for multiple treatments and we different
- trees.
- Seems hardest so hopefully we don't want this too much.
- Can we alternate between increasing the depth of the two trees and maybe
- after each we residualize the other variables?
+\begin_layout Standard
+Now 
+\begin_inset Formula $w$
+\end_inset
+
+ can be a vector.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+To do: Check this last step with someone (replacing 
+\begin_inset Formula $S^{2}$
+\end_inset
+
+ with 
+\begin_inset Formula $\hat{\sigma}^{2}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+To do: Show empirically that with original setup that pre-processing the
+ fit based approaches that it is equivalent to CT for both A and H
+\end_layout
+
+\begin_layout Subsection
+Comparisons
 \end_layout
 
 \end_body
