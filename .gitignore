@@ -37,3 +37,8 @@ src/*.dll
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+## Packages
+*.tar.gz
+..Rcheck/
+src/symbols.rds

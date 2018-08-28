@@ -50,6 +50,11 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
+\branch hide
+\selected 0
+\filename_suffix 0
+\color #faf0e6
+\end_branch
 \index Index
 \shortcut idx
 \color #008000
@@ -166,6 +171,20 @@ We wish to estimate this in terms of
 \end_inset
 
 )
+) 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $S^{2}=\frac{1}{n-1}\sum_{i}(y_{i}-\bar{y})^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -292,6 +311,10 @@ te
 \emph default
 st sample.
 \end_layout
+
+\begin_layout Standard
+\begin_inset Branch hide
+status collapsed
 
 \begin_layout Section
 Binary treatment effects
@@ -440,6 +463,17 @@ reference "eq:honest-mean"
 
 Where we use as the criterion the negative.
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\begin_inset Branch hide
+status collapsed
 
 \begin_layout Section
 Scalar regressor
@@ -626,6 +660,14 @@ To do: Is my approach to generalizing correct? If not, how important is
  it
 \end_layout
 
+<<<<<<< HEAD
+=======
+\end_inset
+
+
+\end_layout
+
+>>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \begin_layout Section
 Multiple regressors and the connection to Fit-based approach
 \end_layout
@@ -662,11 +704,16 @@ Notice that if in each leaf we pre-process
 For the honest version we use 
 \begin_inset Formula 
 \begin{align*}
+<<<<<<< HEAD
 \widehat{EMSE}_{\mu,W}(S^{tr},N^{est},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}_{w}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)-\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\left(S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)+S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)\right)
+=======
+\widehat{EMSE}_{\mu,W}(S^{tr},N^{est},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}_{w}^{2}(W_{i},X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)-\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\hat{\sigma_{l}^{2}}
+>>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \end{align*}
 
 \end_inset
 
+<<<<<<< HEAD
 
 \end_layout
 
@@ -675,6 +722,39 @@ For the honest version we use
 \emph on
 To do: Show that with original setup that pre-processing the fit based approache
 s (A and H) that it is equivalent to CT
+=======
+Where we see that variance of the mean function is the estimated error in
+ that leaf.
+\end_layout
+
+\begin_layout Standard
+Now 
+\begin_inset Formula $w$
+\end_inset
+
+ can be a vector.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+To do: Check this last step with someone (replacing 
+\begin_inset Formula $S^{2}$
+\end_inset
+
+ with 
+\begin_inset Formula $\hat{\sigma}^{2}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+To do: Show empirically that with original setup that pre-processing the
+ fit based approaches that it is equivalent to CT for both A and H
+>>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \end_layout
 
 \begin_layout Subsection
