@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -21,6 +21,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -50,6 +52,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
+\use_minted 0
 \branch hide
 \selected 0
 \filename_suffix 0
@@ -65,7 +68,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -170,8 +176,7 @@ We wish to estimate this in terms of
 \begin_inset Formula $\mathbb{V}(\hat{\mu})=N^{-1}S^{2}$
 \end_inset
 
-)
-) 
+)) 
 \begin_inset Note Note
 status open
 
@@ -314,7 +319,8 @@ st sample.
 
 \begin_layout Standard
 \begin_inset Branch hide
-status collapsed
+inverted 0
+status open
 
 \begin_layout Section
 Binary treatment effects
@@ -473,6 +479,7 @@ Where we use as the criterion the negative.
 
 \emph on
 \begin_inset Branch hide
+inverted 0
 status collapsed
 
 \begin_layout Section
@@ -660,14 +667,11 @@ To do: Is my approach to generalizing correct? If not, how important is
  it
 \end_layout
 
-<<<<<<< HEAD
-=======
 \end_inset
 
 
 \end_layout
 
->>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \begin_layout Section
 Multiple regressors and the connection to Fit-based approach
 \end_layout
@@ -675,8 +679,8 @@ Multiple regressors and the connection to Fit-based approach
 \begin_layout Standard
 To get to multiple regressors, we need an aggregate metric and the fit-based
  one is the most natural.
- The problem is that in typical usage in the CT paper it will find splits
- with different means but not different treatments effects.
+ The problem is that in typical usage in the CT paper the fit metric will
+ find splits with different means but not different treatments effects.
  That is cares about any different in the model, not necessarily for the
  coefficients we want.
  So we need to find a way so that this approach can focus on some coefficients.
@@ -704,25 +708,13 @@ Notice that if in each leaf we pre-process
 For the honest version we use 
 \begin_inset Formula 
 \begin{align*}
-<<<<<<< HEAD
-\widehat{EMSE}_{\mu,W}(S^{tr},N^{est},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}_{w}^{2}(X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)-\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\left(S_{S_{\mathrm{treat}}^{\mathrm{tr}}}^{2}(\ell)+S_{S_{\mathrm{control}}^{\mathrm{tr}}}^{2}(\ell)\right)
-=======
 \widehat{EMSE}_{\mu,W}(S^{tr},N^{est},\Pi) & =\frac{1}{N^{\mathrm{tr}}}\sum_{i\in\mathcal{S}^{\mathrm{tr}}}\hat{\mu}_{w}^{2}(W_{i},X_{i};\mathcal{S}^{\mathrm{tr}},\Pi)-\left(\frac{1}{N^{\mathrm{tr}}}+\frac{1}{N^{\mathrm{est}}}\right)\sum_{\ell}\hat{\sigma_{l}^{2}}
->>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \end{align*}
 
 \end_inset
 
-<<<<<<< HEAD
-
-\end_layout
-
-\begin_layout Standard
 
 \emph on
-To do: Show that with original setup that pre-processing the fit based approache
-s (A and H) that it is equivalent to CT
-=======
 Where we see that variance of the mean function is the estimated error in
  that leaf.
 \end_layout
@@ -754,7 +746,6 @@ To do: Check this last step with someone (replacing
 \emph on
 To do: Show empirically that with original setup that pre-processing the
  fit based approaches that it is equivalent to CT for both A and H
->>>>>>> 4ae0fcf2076a965252a448b590fe506b52fa07ba
 \end_layout
 
 \begin_layout Subsection
